@@ -1,0 +1,88 @@
+OneBitDemux {
+    // input nodes
+    Write0 1: C;
+    Write1 2: C;
+    DemuxI 2: C;
+    ResetI 5: C;
+
+    // reset loop
+    ResetResetO 5: C;
+    ResetSig0 4: C;
+    ResetSig1 3 : C;
+    ResetDemux0 2: C;
+    ResetDemux1 1: C;
+
+    // central counter 
+    C:  
+        Sig0 
+        Sig1 
+        Demux0 
+        Demux1 
+
+        ResetResetO
+        ResetSig0
+        ResetSig1
+        ResetDemux0
+        ResetDemux1
+
+        ResetO;
+
+    // terminal nodes
+    Sig0;
+    Sig1;
+    Demux0;
+    Demux1;
+    ResetO;
+}
+
+Demux_2bit {
+    Demux_1_0 = OneBitDemux;
+    Demux_2_0 = OneBitDemux;
+    Demux_2_1 = OneBitDemux;
+
+    DemuxI: Demux_1_0.DemuxI;
+    Demux_1_0.Demux0: Demux_2_0.DemuxI;
+    Demux_1_0.Demux1: Demux_2_1.DemuxI;
+    Demux_2_0.Demux0: Demux_00;
+    Demux_2_0.Demux1: Demux_01;
+    Demux_2_1.Demux0: Demux_10;
+    Demux_2_1.Demux1: Demux_11;
+    Demux_00;
+    Demux_01;
+    Demux_10;
+    Demux_11;
+
+    Write0X: Demux_1_0.Write0;
+    Demux_1_0.Sig0: Sig0X;
+    Sig0X;
+    Write1X: Demux_1_0.Write1;
+    Demux_1_0.Sig1: Sig1X;
+    Sig1X;
+
+    WriteX0: Demux_2_0.Write0;
+    Demux_2_0.Sig0: Demux_2_1.Write0;
+    Demux_2_1.Sig0: SigX0;
+    SigX0;
+    WriteX1: Demux_2_0.Write1;
+    Demux_2_0.Sig1: Demux_2_1.Write1;
+    Demux_2_1.Sig1: SigX1;
+    SigX1;
+
+    ResetI: Demux_1_0.ResetI;
+    Demux_1_0.ResetO: Demux_2_0.ResetI;
+    Demux_2_0.ResetO: Demux_2_1.ResetI;
+    Demux_2_1.ResetO: ResetO;
+    ResetO;
+}
+
+T = Demux_2bit;
+
+// expecting 01
+T.Demux_01: SUCCESS;
+SUCCESS;
+
+T.Write0X <;
+T.WriteX1 <;
+T.DemuxI <;
+
+T.ResetI <;

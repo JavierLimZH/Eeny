@@ -1,0 +1,6 @@
+start 72: chr0;
+!chr0 105: chr1;
+!chr1 33: end;
+!end;
+
+start <;

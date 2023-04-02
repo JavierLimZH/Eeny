@@ -1,0 +1,20 @@
+// Truth machine. 
+// If the input is 0, halt. 
+// If the input is 1, print 1 forever.
+
+// if 0 (48), count even number and land on zero
+// if 1 (49), count odd number and land on one
+split 1: one zero;
+
+// send 48 to output counter
+zero 48: output_zero;
+// output, and halt
+!output_zero;
+
+// send 49 to output counter
+one 49: output_one;
+// output, and send another 49 to self
+!output_one 49: output_one;
+
+// input to split
+split < ?;

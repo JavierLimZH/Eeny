@@ -1,0 +1,27 @@
+start: _line* trigger*
+
+_line: counter_def | struct_def | struct_set
+trigger: name "<" count? ";"
+
+counter_def: outp_flag? name count? (":" cycle)?  ";"
+
+struct_def: name "{" (counter_def | struct_set)* "}"
+struct_set: name "=" name ";"
+struct_sep: "."
+
+!name: NAME (struct_sep NAME)*
+!cycle: name+
+!count: inp_flag | NUMBER
+
+!outp_flag: "!"
+!inp_flag: "?"
+
+
+%import common.CNAME -> NAME
+%import common.NUMBER 
+%import common.WS
+
+COMMENT: "//" /[^\n]*/ "\n"
+
+%ignore WS
+%ignore COMMENT

@@ -1,0 +1,49 @@
+// input nodes
+Write0 1: C;
+Write1 2: C;
+DemuxI 2: C;
+ResetI 5: C;
+
+// reset loop
+// each possible normal state has a reset state
+// ResetI will cause normal -> reset 
+// from the reset state, it will chain back to 
+// the final ResetO state
+ResetResetO 5: C;
+ResetSig0 4: C;
+ResetSig1 3: C;
+ResetDemux0 2: C;
+ResetDemux1 1: C;
+
+// central counter 
+C:  Sig0 
+    Sig1 
+    Demux0 
+    Demux1 
+
+    ResetResetO
+    ResetSig0
+    ResetSig1
+    ResetDemux0
+    ResetDemux1
+
+    ResetO;
+
+// terminal nodes
+Sig0;
+Sig1;
+Demux0;
+Demux1;
+ResetO;
+
+
+Write0 <;
+DemuxI <;
+ResetI <;
+
+Write1 <;
+DemuxI <;
+ResetI <;
+
+Write0 <;
+ResetI <;
